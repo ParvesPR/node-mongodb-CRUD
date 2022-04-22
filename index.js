@@ -18,7 +18,9 @@ async function run() {
         const userCollection = client.db('mealExpress').collection('user');
 
         app.post('/', (req, res) => {
-
+            const newUser = req.body;
+            console.log('user sending', newUser);
+            res.send('received')
         })
 
     }
