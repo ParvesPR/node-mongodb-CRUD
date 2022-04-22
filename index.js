@@ -17,10 +17,18 @@ async function run() {
         await client.connect();
         const userCollection = client.db('mealExpress').collection('user');
 
-        app.post('/', (req, res) => {
+        app.get('/user', async (req, res) => {
+            const query = {};
+            const cursor = userCollection.find(query);
+            const users = await cursor.toArray();
+            res.send(users)
+        })
+
+        app.post('/', async (req, res) => {
             const newUser = req.body;
             console.log('user sending', newUser);
-            res.send('received')
+            const result = await userCollection.insertOne(newUser);
+            res.send(result)
         })
 
     }
