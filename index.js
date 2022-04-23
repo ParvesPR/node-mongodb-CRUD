@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors');
+const { object } = require('webidl-conversions');
 const port = process.env.PORT || 5000;
 
 app.use(cors());
@@ -17,6 +19,7 @@ async function run() {
         await client.connect();
         const userCollection = client.db('mealExpress').collection('user');
 
+        // get users
         app.get('/user', async (req, res) => {
             const query = {};
             const cursor = userCollection.find(query);
@@ -24,10 +27,19 @@ async function run() {
             res.send(users)
         })
 
+        // post: add a user
         app.post('/', async (req, res) => {
             const newUser = req.body;
             console.log('user sending', newUser);
             const result = await userCollection.insertOne(newUser);
+            res.send(result)
+        });
+
+        // delete user
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await userCollection.deleteOne(query);
             res.send(result)
         })
 
