@@ -25,6 +25,12 @@ async function run() {
             const cursor = userCollection.find(query);
             const users = await cursor.toArray();
             res.send(users)
+        });
+
+        app.get('/user', async (req, res) => {
+            const query = { _id: ObjectId(id) };
+            const result = await userCollection.findOne(query);
+            res.send(result)
         })
 
         // post: add a user
